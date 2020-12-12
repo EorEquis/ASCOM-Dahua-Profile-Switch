@@ -349,6 +349,4 @@ healthchecksdb
 MigrationBackup/
 
 # Inno Setup scripts
-*.ino
-
 *.iss
