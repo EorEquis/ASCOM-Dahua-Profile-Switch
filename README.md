@@ -7,10 +7,16 @@ It will set the profile to either Day or Night.
 SwitchState False (Off) = Night profile
 SwitechState True (On) = Day profile
 
-You should :
+### You should :
 
 * Configure your camera's Day and Night profile as desired.  Presumably one will disable IR.
 * Configure your client software to select the right switch value before and after the imaging session.
+
+### History of Changes
+
+* 1.0.0 - Initial working build
+* 1.0.1 - Fix and issue w/ GetSwitchValue() causing conformance to fail.
+* 1.0.2 - Fix and issue w/ SetSwitchValue() causing conformance to fail.
 
 Note :
 
