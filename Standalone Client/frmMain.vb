@@ -1,4 +1,4 @@
-﻿Public Class Form1
+﻿Public Class frmMain
 
     Private driver As ASCOM.DriverAccess.Switch
 
@@ -57,16 +57,6 @@
             Return driver.Connected
         End Get
     End Property
-
-    Private Sub btnDay_Click(sender As Object, e As EventArgs) Handles btnDay.Click
-        driver.SetSwitch(0, True)
-        lblMode.Text = driver.GetSwitch(0)
-    End Sub
-
-    Private Sub btnNight_Click(sender As Object, e As EventArgs) Handles btnNight.Click
-        driver.SetSwitch(0, False)
-        lblMode.Text = driver.GetSwitch(0)
-    End Sub
 
     ' TODO: Add additional UI and controls to test more of the driver being tested.
 

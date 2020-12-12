@@ -32,7 +32,7 @@ Namespace My
 
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()> _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.ASCOM.TriStarDahuaProfile.Form1
+            Me.MainForm = Global.ASCOM.TriStarDahuaProfile.frmMain
         End Sub
     End Class
 End Namespace

@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form1
+Partial Class frmMain
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -25,25 +25,26 @@ Partial Class Form1
         Me.labelDriverId = New System.Windows.Forms.Label()
         Me.buttonConnect = New System.Windows.Forms.Button()
         Me.buttonChoose = New System.Windows.Forms.Button()
-        Me.btnDay = New System.Windows.Forms.Button()
-        Me.btnNight = New System.Windows.Forms.Button()
-        Me.lblMode = New System.Windows.Forms.Label()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'labelDriverId
         '
         Me.labelDriverId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.labelDriverId.DataBindings.Add(New System.Windows.Forms.Binding("Text", Global.ASCOM.TriStarDahuaProfile.My.MySettings.Default, "DriverId", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
-        Me.labelDriverId.Location = New System.Drawing.Point(12, 37)
+        Me.labelDriverId.Location = New System.Drawing.Point(12, 28)
         Me.labelDriverId.Name = "labelDriverId"
-        Me.labelDriverId.Size = New System.Drawing.Size(291, 21)
+        Me.labelDriverId.Size = New System.Drawing.Size(417, 21)
         Me.labelDriverId.TabIndex = 5
         Me.labelDriverId.Text = Global.ASCOM.TriStarDahuaProfile.My.MySettings.Default.DriverId
         Me.labelDriverId.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'buttonConnect
         '
-        Me.buttonConnect.Location = New System.Drawing.Point(316, 36)
+        Me.buttonConnect.Location = New System.Drawing.Point(435, 41)
         Me.buttonConnect.Name = "buttonConnect"
         Me.buttonConnect.Size = New System.Drawing.Size(72, 23)
         Me.buttonConnect.TabIndex = 4
@@ -52,61 +53,64 @@ Partial Class Form1
         '
         'buttonChoose
         '
-        Me.buttonChoose.Location = New System.Drawing.Point(316, 7)
+        Me.buttonChoose.Location = New System.Drawing.Point(435, 12)
         Me.buttonChoose.Name = "buttonChoose"
         Me.buttonChoose.Size = New System.Drawing.Size(72, 23)
         Me.buttonChoose.TabIndex = 3
         Me.buttonChoose.Text = "Choose"
         Me.buttonChoose.UseVisualStyleBackColor = True
         '
-        'btnDay
+        'RadioButton1
         '
-        Me.btnDay.Location = New System.Drawing.Point(12, 104)
-        Me.btnDay.Name = "btnDay"
-        Me.btnDay.Size = New System.Drawing.Size(75, 23)
-        Me.btnDay.TabIndex = 6
-        Me.btnDay.Text = "Day Mode"
-        Me.btnDay.UseVisualStyleBackColor = True
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Location = New System.Drawing.Point(35, 23)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(90, 17)
+        Me.RadioButton1.TabIndex = 6
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "RadioButton1"
+        Me.RadioButton1.UseVisualStyleBackColor = True
         '
-        'btnNight
+        'RadioButton2
         '
-        Me.btnNight.Location = New System.Drawing.Point(94, 104)
-        Me.btnNight.Name = "btnNight"
-        Me.btnNight.Size = New System.Drawing.Size(75, 23)
-        Me.btnNight.TabIndex = 7
-        Me.btnNight.Text = "Night Mode"
-        Me.btnNight.UseVisualStyleBackColor = True
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(35, 46)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(90, 17)
+        Me.RadioButton2.TabIndex = 7
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Text = "RadioButton2"
+        Me.RadioButton2.UseVisualStyleBackColor = True
         '
-        'lblMode
+        'Panel1
         '
-        Me.lblMode.AutoSize = True
-        Me.lblMode.Location = New System.Drawing.Point(12, 151)
-        Me.lblMode.Name = "lblMode"
-        Me.lblMode.Size = New System.Drawing.Size(93, 13)
-        Me.lblMode.TabIndex = 8
-        Me.lblMode.Text = "Mode is Unknown"
+        Me.Panel1.Controls.Add(Me.RadioButton1)
+        Me.Panel1.Controls.Add(Me.RadioButton2)
+        Me.Panel1.Location = New System.Drawing.Point(12, 67)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(200, 100)
+        Me.Panel1.TabIndex = 8
         '
-        'Form1
+        'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(400, 233)
-        Me.Controls.Add(Me.lblMode)
-        Me.Controls.Add(Me.btnNight)
-        Me.Controls.Add(Me.btnDay)
+        Me.ClientSize = New System.Drawing.Size(519, 233)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.labelDriverId)
         Me.Controls.Add(Me.buttonConnect)
         Me.Controls.Add(Me.buttonChoose)
-        Me.Name = "Form1"
-        Me.Text = "Form1"
+        Me.Name = "frmMain"
+        Me.Text = "Dahua Profile Switcher Standalone Client"
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Private WithEvents labelDriverId As System.Windows.Forms.Label
     Private WithEvents buttonConnect As System.Windows.Forms.Button
     Private WithEvents buttonChoose As System.Windows.Forms.Button
-    Friend WithEvents btnDay As Button
-    Friend WithEvents btnNight As Button
-    Friend WithEvents lblMode As Label
+    Friend WithEvents RadioButton1 As RadioButton
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents Panel1 As Panel
 End Class
