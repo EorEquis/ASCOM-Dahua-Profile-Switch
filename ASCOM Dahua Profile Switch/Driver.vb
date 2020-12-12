@@ -425,6 +425,9 @@ Public Class Switch
 
     End Sub
 
+
+
+
 #End Region
 #End Region
 
@@ -572,7 +575,9 @@ Public Class Switch
         Dim ConfigURI(3) As Uri
         For i = 0 To numCameras - 1
             ConfigURI(i) = New Uri("http://" + IPAddress(i) + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
-            credentials.Add(ConfigURI(i), "Digest", New Net.NetworkCredential(camUsername(i), camPassword(i)))
+            If credentials.GetCredential(ConfigURI(i), "Digest") Is Nothing Then    ' Check to see if credential exists, for multi cam testing w/ 1 cam
+                credentials.Add(ConfigURI(i), "Digest", New Net.NetworkCredential(camUsername(i), camPassword(i)))
+            End If
         Next  'i
         '        Dim getConfigURI As New Uri("http://" + IPAddress + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
         '        credentials.Add(getConfigURI, "Digest", New Net.NetworkCredential(camUsername, camPassword))
