@@ -1,0 +1,106 @@
+Conform Report Hash (V1): D86437428EE4B216E3DF5FB712145B580F138BE62C0731AE73BF2BBEE205FB5D26AE33640E124DC5D35B479B738DCE1F679663B124A3EDBA8E82F1424FE962FE
+
+ 
+ConformanceCheck ASCOM Device Conformance Checker Version 6.5.7500.22514, Build time: 7/14/2020 1:30:28 PM
+ConformanceCheck Running on: ASCOM Platform 6.5 SP1 - RC1 6.5.1.3174
+ 
+ConformanceCheck Driver ProgID: ASCOM.TriStarDahuaProfile.Switch
+ 
+Error handling 
+Error number for "Not Implemented" is: 80040400
+Error number for "Invalid Value 1" is: 80040405
+Error number for "Value Not Set 1" is: 80040402
+Error number for "Value Not Set 2" is: 80040403
+Error messages will not be interpreted to infer state.
+ 
+08:45:19.512 Driver Access Checks              OK       
+08:45:20.264 AccessChecks                      OK       Successfully created driver using late binding
+08:45:20.956 AccessChecks                      OK       Successfully connected using late binding
+08:45:20.962 AccessChecks                      INFO     The driver is a .NET object
+08:45:20.968 AccessChecks                      INFO     The AssemblyQualifiedName is: ASCOM.TriStarDahuaProfile.Switch, ASCOM Dahua Profile Switch, Version=6.5.0.
+08:45:20.976 AccessChecks                      INFO     The driver implements interface: ASCOM.DeviceInterface.ISwitchV2
+08:45:21.708 AccessChecks                      INFO     Device does not expose interface ISwitch
+08:45:21.814 AccessChecks                      INFO     Device exposes interface ISwitchV2
+08:45:23.088 AccessChecks                      OK       Successfully created driver using driver access toolkit
+08:45:23.178 AccessChecks                      OK       Successfully connected using driver access toolkit
+ 
+Conform is using ASCOM.DriverAccess.Switch to get a Switch object
+08:45:23.824 ConformanceCheck                  OK       Driver instance created successfully
+08:45:24.334 ConformanceCheck                  OK       Connected OK
+ 
+Common Driver Methods 
+08:45:24.388 InterfaceVersion                  OK       2
+08:45:24.428 Connected                         OK       True
+08:45:24.478 Description                       OK       TriStar Dahua Camera Profile Switch
+08:45:24.522 DriverInfo                        OK       Driver Version: 1.0
+08:45:24.568 DriverVersion                     OK       1.0
+08:45:24.616 Name                              OK       Dahua Profile Switch
+08:45:24.664 CommandString                     INFO     Conform cannot test the CommandString method
+08:45:24.674 CommandBlind                      INFO     Conform cannot test the CommandBlind method
+08:45:24.682 CommandBool                       INFO     Conform cannot test the CommandBool method
+08:45:24.692 Action                            INFO     Conform cannot test the Action method
+08:45:24.702 SupportedActions                  OK       Driver returned an empty action list
+ 
+Properties 
+08:45:24.860 MaxSwitch                         OK       1
+ 
+Methods 
+08:45:24.980 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: CanWrite
+08:45:24.988 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: CanWrite
+08:45:24.996 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: GetSwitch
+08:45:25.004 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: GetSwitch
+08:45:25.014 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: GetSwitchDescription
+08:45:25.022 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: GetSwitchDescription
+08:45:25.056 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: GetSwitchName
+08:45:25.066 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: GetSwitchName
+08:45:25.076 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: GetSwitchValue
+08:45:25.082 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: GetSwitchValue
+08:45:25.092 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: MaxSwitchValue
+08:45:25.102 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: MaxSwitchValue
+08:45:25.110 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: MinSwitchValue
+08:45:25.120 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: MinSwitchValue
+08:45:25.134 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: SetSwitch
+08:45:25.146 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: SetSwitch
+08:45:25.156 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: SetSwitchValue
+08:45:25.166 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: SetSwitchValue
+08:45:25.180 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID below 0 was used in method: SwitchStep
+08:45:25.188 SwitchNumber                      OK       Switch device threw an InvalidOperationException when a switch ID above MaxSwitch was used in method: SwitchStep
+08:45:25.244 GetSwitchName                     OK       Found switch 0
+08:45:25.254 GetSwitchName                     OK         Name: ObsCam
+08:45:25.264 GetSwitchDescription              OK         Description: ObsCam
+08:45:25.276 MinSwitchValue                    OK         Minimum: 0
+08:45:25.288 MaxSwitchValue                    OK         Maximum: 1
+08:45:25.304 SwitchStep                        OK         Step size: 1
+08:45:25.328 SwitchStep                        OK         Step size is greater than zero
+08:45:25.336 SwitchStep                        OK         Step size is less than the range of possible values
+08:45:25.344 SwitchStep                        OK         The switch range is an integer multiple of the step size.
+08:45:25.354 CanWrite                          OK         CanWrite: True
+08:45:25.364 GetSwitch                         OK         True
+08:45:25.374 GetSwitchValue                    OK         1
+08:45:26.816 SetSwitch                         OK         GetSwitch returned False after SetSwitch(False)
+08:45:26.824 SetSwitch                         OK         GetSwitchValue returned MINIMUM_VALUE after SetSwitch(False)
+08:45:33.374 SetSwitch                         OK         GetSwitch read True after SetSwitch(True)
+08:45:33.385 SetSwitch                         OK         GetSwitchValue returned MAXIMUM_VALUE after SetSwitch(True)
+08:45:45.227 SetSwitchValue                    OK         GetSwitch returned False after SetSwitchValue(MINIMUM_VALUE)
+08:45:45.239 SetSwitchValue                    OK         GetSwitchValue returned MINIMUM_VALUE after SetSwitchValue(MINIMUM_VALUE)
+08:45:50.316 SetSwitchValue                    OK         Switch threw an InvalidOperationException when a value below SwitchMinimum was set: -1
+08:45:56.748 SetSwitchValue                    OK         GetSwitch returned True after SetSwitchValue(MAXIMUM_VALUE)
+08:45:56.756 SetSwitchValue                    OK         GetSwitchValue returned MAXIMUM_VALUE after SetSwitchValue(MAXIMUM_VALUE)
+08:46:01.835 SetSwitchValue                    OK         Switch threw an InvalidOperationException when a value above SwitchMaximum was set: 2
+08:46:06.957 SetSwitchValue                    INFO       Testing with steps that are 0% offset from integer SwitchStep values
+08:46:08.409 SetSwitchValue Offset:   0%       OK         Set and read match: 0
+08:46:14.874 SetSwitchValue Offset:   0%       OK         Set and read match: 1
+08:46:20.009 SetSwitchValue                    INFO       Testing with steps that are 25% offset from integer SwitchStep values
+08:46:21.451 SetSwitchValue Offset:  25%       INFO       Set/Read differ by 20-30% of SwitchStep. Set: 0.25, Read: 0
+08:46:26.611 SetSwitchValue                    INFO       Testing with steps that are 50% offset from integer SwitchStep values
+08:46:27.998 SetSwitchValue Offset:  50%       INFO       Set/Read differ by 40-50% of SwitchStep. Set: 0.5, Read: 1
+08:46:33.187 SetSwitchValue                    INFO       Testing with steps that are 75% offset from integer SwitchStep values
+08:46:34.349 SetSwitchValue Offset:  75%       INFO       Set/Read differ by 20-30% of SwitchStep. Set: 0.75, Read: 1
+08:46:39.591 SetSwitchValue                    OK         Switch has been reset to its original state
+ 
+ 
+Conformance test complete 
+ 
+No errors, warnings or issues found: your driver passes ASCOM validation!! 
+ 
+Driver Hash Value: E213219D918D3B41208D449B887C7FBDF3837CDE78E1B0F560574806FE0351656F2E109CEE52B79A1F3130AE9D27DD09DCB5FF93B9866522A8D36CB7CCC286BB

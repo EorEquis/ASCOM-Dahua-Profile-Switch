@@ -5,13 +5,13 @@
 [Setup]
 AppID={{67a4ae9e-cc2d-426e-acd0-cbfc8a7a07ca}
 AppName=ASCOM TriStarDahuaProfile Switch Driver
-AppVerName=ASCOM TriStarDahuaProfile Switch Driver 1.0.0
-AppVersion=1.0.0
+AppVerName=ASCOM TriStarDahuaProfile Switch Driver 1.0.2
+AppVersion=1.0.2
 AppPublisher=EorEquis <eorequis@tristarobservatory.com>
 AppPublisherURL=mailto:eorequis@tristarobservatory.com
 AppSupportURL=https://ascomtalk.groups.io/g/Help
 AppUpdatesURL=https://ascom-standards.org/
-VersionInfoVersion=1.0.0
+VersionInfoVersion=1.0.2
 MinVersion=6.1.7601
 DefaultDirName="{cf}\ASCOM\Switch"
 DisableDirPage=yes

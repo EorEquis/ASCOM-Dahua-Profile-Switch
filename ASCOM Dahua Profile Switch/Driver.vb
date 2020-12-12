@@ -83,7 +83,7 @@ Public Class Switch
     Private TL As TraceLogger                               ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private VerMaj As String = "1"
     Private VerMin As String = "0"
-    Private VerBuild As String = "0"
+    Private VerBuild As String = "2"
 
     '
     ' Constructor - Must be public for COM registration!
@@ -200,7 +200,7 @@ Public Class Switch
         Get
             Dim m_version As Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
             ' TODO customise this driver description
-            Dim s_driverInfo As String = "Information about the driver itself. Version: " + VerMaj + "." + VerMin
+            Dim s_driverInfo As String = "Driver Version: " + VerMaj + "." + VerMin
             TL.LogMessage("DriverInfo Get", s_driverInfo)
             Return s_driverInfo
         End Get
@@ -289,8 +289,8 @@ Public Class Switch
     ''' <exception cref="InvalidValueException">If id is outside the range 0 to MaxSwitch - 1</exception>
     Public Function GetSwitchDescription(id As Short) As String Implements ISwitchV2.GetSwitchDescription
         Validate("GetSwitchDescription", id)
-        TL.LogMessage("GetSwitchDescription", "Not Implemented")
-        Throw New ASCOM.MethodNotImplementedException("GetSwitchDescription")
+        TL.LogMessage("GetSwitchDescription", "Returning " + CameraName)
+        Return CameraName
     End Function
 
     ''' <summary>
@@ -380,13 +380,20 @@ Public Class Switch
     ''' <summary>
     ''' returns the analogue switch value for switch id
     ''' boolean switches must throw a MethodNotImplementedException
+    ''' This is not true, they just haven't updated the template.  Docs now say it must not throw MethodNotImplementedException
     ''' </summary>
     ''' <param name="id"></param>
     ''' <returns></returns>
     Function GetSwitchValue(id As Short) As Double Implements ISwitchV2.GetSwitchValue
-        Validate("GetSwitchValue", id, False)
-        TL.LogMessage("GetSwitchValue", "Not Implemented")
-        Throw New ASCOM.MethodNotImplementedException("GetSwitchValue")
+        Dim retVal As Double
+        Validate("GetSwitchValue", id, True)
+        If GetSwitch(id) Then
+            retVal = 1.0
+        Else
+            retVal = 0.0
+        End If
+        TL.LogMessage("GetSwitchValue", String.Format("Switch id {0} : {1}", id, retVal))
+        Return retVal
     End Function
 
     ''' <summary>
@@ -398,12 +405,21 @@ Public Class Switch
     ''' <param name="id"></param>
     ''' <param name="value"></param>
     Sub SetSwitchValue(id As Short, value As Double) Implements ISwitchV2.SetSwitchValue
+        Dim setVal As Boolean
         Validate("SetSwitchValue", id, value)
         If value < MinSwitchValue(id) Or value > MaxSwitchValue(id) Then
             Throw New InvalidValueException("", value.ToString(), String.Format("{0} to {1}", MinSwitchValue(id), MaxSwitchValue(id)))
+            TL.LogMessage("SetSwitchValue", String.Format("InvalidValueException Switch id {0} : value {1}", id, value))
         End If
-        TL.LogMessage("SetSwitchValue", "Not Implemented")
-        Throw New ASCOM.MethodNotImplementedException("SetSwitchValue")
+
+        If value < 0.5 Then
+            setVal = False
+        Else
+            setVal = True
+        End If
+        TL.LogMessage("SetSwitchValue", String.Format("Switch id {0} : value {1}, set {2}", id, value, setVal.ToString))
+        SetSwitch(id, setVal)
+
     End Sub
 
 #End Region
@@ -444,7 +460,7 @@ Public Class Switch
     ''' <param name="id">The id.</param>
     ''' <param name="value">The value.</param>
     Private Sub Validate(message As String, id As Short, value As Double)
-        Validate(message, id, False)
+        Validate(message, id, True)
         Dim min = MinSwitchValue(id)
         Dim max = MaxSwitchValue(id)
         If (value < min Or value > max) Then
