@@ -5,7 +5,8 @@ This driver will change the Profile of up to 4 Dahua cameras that expose the Dah
 It will set the profile to either Day or Night.
 
 SwitchState False (Off) = Night profile
-SwitechState True (On) = Day profile
+
+SwitchState True (On) = Day profile
 
 ### You should :
 
