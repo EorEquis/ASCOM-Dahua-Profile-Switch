@@ -3,7 +3,7 @@ This driver will change the Profile of up to 4 Dahua cameras that expose the Dah
 It will set the profile to either Day or Night.
 
 SwitchState False (Off) = Night profile
-SwitechState True (On) = Day profile
+SwitchState True (On) = Day profile
 
 You should :
 
@@ -17,9 +17,9 @@ History of Changes
 * 1.0.2 - Fix an issue w/ SetSwitchValue() causing conformance to fail.
 * 1.1.0	- First working multi-camera version
 
-Note :
+Note for users of Sequence Generator Pro 4.x:
 
-Because of the weird way SGP v4 handles switches, it will insist on connecting BEFORE you are given
+Because of the weird way SGP v4 currently handles switches, it will insist on connecting BEFORE you are given
 an opportunity to configure the switch.  This will result in a long delay starting SGP, and unpredictable
 behaviour after it finally starts.
 
