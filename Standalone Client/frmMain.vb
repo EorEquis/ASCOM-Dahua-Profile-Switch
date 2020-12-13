@@ -1,4 +1,4 @@
-﻿Public Class Form1
+﻿Public Class frmMain
 
     Private driver As ASCOM.DriverAccess.Switch
 
@@ -41,6 +41,30 @@
         buttonConnect.Enabled = Not String.IsNullOrEmpty(My.Settings.DriverId)
         buttonChoose.Enabled = Not IsConnected
         buttonConnect.Text = IIf(IsConnected, "Disconnect", "Connect")
+        If IsConnected Then
+            ' Show radio button panels for numCameras 
+            Dim p As Panel, rbOn As RadioButton, rbOff As RadioButton
+            For i As Integer = 1 To 4
+                p = Me.Controls("Panel" & i.ToString)
+                If i <= driver.MaxSwitch Then
+                    p.Enabled = True
+                    p.Visible = True
+                    rbOn = p.Controls("rbOn" & i)
+                    rbOff = p.Controls("rbOff" & i)
+                    rbOn.Text = driver.GetSwitchName(i - 1) & " On - Day"
+                    rbOff.Text = driver.GetSwitchName(i - 1) & " Off - Night"
+                    If driver.GetSwitch(i - 1) Then
+                        rbOn.Checked = True
+                    Else
+                        rbOff.Checked = False
+                    End If
+                Else
+                    p.Enabled = False
+                    p.Visible = False
+                End If
+
+            Next
+        End If
     End Sub
 
     ''' <summary>
@@ -58,16 +82,10 @@
         End Get
     End Property
 
-    Private Sub btnDay_Click(sender As Object, e As EventArgs) Handles btnDay.Click
-        driver.SetSwitch(0, True)
-        lblMode.Text = driver.GetSwitch(0)
+    Private Sub rbOn1_CheckedChanged(sender As Object, e As EventArgs) Handles rbOn4.CheckedChanged, rbOn3.CheckedChanged, rbOn2.CheckedChanged, rbOn1.CheckedChanged
+        Dim rb As RadioButton = DirectCast(sender, RadioButton)
+        Dim id As Short = CShort(Microsoft.VisualBasic.Right(rb.Name, 1))
+        driver.SetSwitch(id - 1, rb.Checked)
     End Sub
-
-    Private Sub btnNight_Click(sender As Object, e As EventArgs) Handles btnNight.Click
-        driver.SetSwitch(0, False)
-        lblMode.Text = driver.GetSwitch(0)
-    End Sub
-
-    ' TODO: Add additional UI and controls to test more of the driver being tested.
 
 End Class

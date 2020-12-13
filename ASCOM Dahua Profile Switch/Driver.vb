@@ -14,6 +14,9 @@
 ' Date			Who	Vers	Description
 ' -----------	---	-----	-------------------------------------------------------
 ' 2020-12-12	Eor	1.0.0	Initial edit, from Switch template
+' 2020-12-12	Eor	1.0.1	Fix an issue w/ GetSwitchValue() causing conformance to fail.
+' 2020-12-12	Eor	1.0.2	Fix an issue w/ SetSwitchValue() causing conformance to fail.
+' 2020-12-12	Eor	1.1.0	First working multi-camera version
 ' ---------------------------------------------------------------------------------
 '
 '
@@ -61,29 +64,34 @@ Public Class Switch
 
     Friend Shared IPProfileName As String = "IP Address"
     Friend Shared traceStateProfileName As String = "Trace Level"
+    Friend Shared cameraNameProfileName As String = "Camera Name"
+    Friend Shared usernameProfileName As String = "Username"
+    Friend Shared passwordProfileName As String = "Password"
+    Friend Shared numCamerasProfileName As String = "Number of Cameras"
+
     Friend Shared IPDefault As String = "192.168.1.108"     ' Default IP of Dahua Cameras
     Friend Shared traceStateDefault As String = "True"
-    Friend Shared cameraNameProfileName As String = "Camera Name"
-    Friend Shared cameraNameDefault As String = "ObsCam"
-    Friend Shared usernameProfileName As String = "Username"
+    Friend Shared cameraNameDefault As String = "Camera"
     Friend Shared usernameDefault As String = "admin"
-    Friend Shared passwordProfileName As String = "Password"
     Friend Shared passwordDefault As String = ""
+    Friend Shared numCamerasDefault As Integer = 1
 
-    Friend Shared IPAddress As String                       ' IP Address of Dahua Camera
+    Friend Shared numCameras As Short
+
     Friend Shared traceState As Boolean
-    Friend Shared CameraName As String                      ' Name of camera and switch
-    Friend Shared SwitchState As Boolean                    ' True == Day, False == Night
-    Friend Shared camUsername As String                     ' Camera username
-    Friend Shared camPassword As String                     ' Camera password
+    Friend Shared IPAddress(3) As String                       ' IP Address of Dahua Camera
+    Friend Shared CameraName(3) As String                      ' Name of camera and switch
+    Friend Shared SwitchState(3) As Boolean                    ' True == Day, False == Night
+    Friend Shared camUsername(3) As String                     ' Camera username
+    Friend Shared camPassword(3) As String                     ' Camera password
 
     Private connectedState As Boolean                       ' Private variable to hold the connected state
     Private utilities As Util                               ' Private variable to hold an ASCOM Utilities object
     Private astroUtilities As AstroUtils                    ' Private variable to hold an AstroUtils object to provide the Range method
     Private TL As TraceLogger                               ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private VerMaj As String = "1"
-    Private VerMin As String = "0"
-    Private VerBuild As String = "2"
+    Private VerMin As String = "1"
+    Private VerBuild As String = "0"
 
     '
     ' Constructor - Must be public for COM registration!
@@ -98,7 +106,6 @@ Public Class Switch
         connectedState = False ' Initialise connected to false
         utilities = New Util() ' Initialise util object
         astroUtilities = New AstroUtils 'Initialise new astro utilities object
-        numSwitches = 1
         TL.LogMessage("Switch", "Completed initialisation")
     End Sub
 
@@ -245,7 +252,6 @@ Public Class Switch
 
 #Region "ISwitchV2 Implementation"
 
-    Dim numSwitches As Short    ' Only support one camera for now.  I'll build out multi cam support if I ever get another Dahua :)
 
 
     ''' <summary>
@@ -253,8 +259,8 @@ Public Class Switch
     ''' </summary>
     Public ReadOnly Property MaxSwitch As Short Implements ISwitchV2.MaxSwitch
         Get
-            TL.LogMessage("MaxSwitch Get", numSwitches.ToString())
-            Return numSwitches
+            TL.LogMessage("MaxSwitch Get", numCameras.ToString())
+            Return numCameras
         End Get
     End Property
 
@@ -265,8 +271,8 @@ Public Class Switch
     ''' <returns>The name of the switch</returns>
     Public Function GetSwitchName(id As Short) As String Implements ISwitchV2.GetSwitchName
         Validate("GetSwitchName", id)
-        TL.LogMessage("GetSwitchName", "Returning CameraName " + CameraName)
-        Return CameraName
+        TL.LogMessage("GetSwitchName", "Returning CameraName " + CameraName(id))
+        Return CameraName(id)
     End Function
 
     ''' <summary>
@@ -289,8 +295,8 @@ Public Class Switch
     ''' <exception cref="InvalidValueException">If id is outside the range 0 to MaxSwitch - 1</exception>
     Public Function GetSwitchDescription(id As Short) As String Implements ISwitchV2.GetSwitchDescription
         Validate("GetSwitchDescription", id)
-        TL.LogMessage("GetSwitchDescription", "Returning " + CameraName)
-        Return CameraName
+        TL.LogMessage("GetSwitchDescription", "Returning " + CameraName(id))
+        Return CameraName(id)
     End Function
 
     ''' <summary>
@@ -318,8 +324,8 @@ Public Class Switch
     ''' <returns>True or false</returns>
     Function GetSwitch(id As Short) As Boolean Implements ISwitchV2.GetSwitch
         Validate("GetSwitch", id, True)
-        TL.LogMessage("GetSwitch", "Returned " + SwitchState.ToString)
-        Return SwitchState
+        TL.LogMessage("GetSwitch", "Returned " + SwitchState(id).ToString)
+        Return SwitchState(id)
     End Function
 
     ''' <summary>
@@ -331,8 +337,8 @@ Public Class Switch
     ''' <param name="State">The required switch state</param>
     Sub SetSwitch(id As Short, state As Boolean) Implements ISwitchV2.SetSwitch
         Validate("SetSwitch", id, True)
-        setMode(state)
-        SwitchState = state
+        setMode(id, state)
+        SwitchState(id) = state
         TL.LogMessage("SetSwitch", "Set SwitchState to " + SwitchState.ToString)
     End Sub
 
@@ -422,6 +428,9 @@ Public Class Switch
 
     End Sub
 
+
+
+
 #End Region
 #End Region
 
@@ -431,8 +440,8 @@ Public Class Switch
     ''' <param name="message">The message.</param>
     ''' <param name="id">The id.</param>
     Private Sub Validate(message As String, id As Short)
-        If (id < 0 Or id >= numSwitches) Then
-            Throw New ASCOM.InvalidValueException(message, id.ToString(), String.Format("0 to {0}", numSwitches - 1))
+        If (id < 0 Or id >= numCameras) Then
+            Throw New ASCOM.InvalidValueException(message, id.ToString(), String.Format("0 to {0}", numCameras - 1))
         End If
     End Sub
 
@@ -531,10 +540,13 @@ Public Class Switch
         Using driverProfile As New Profile()
             driverProfile.DeviceType = "Switch"
             traceState = Convert.ToBoolean(driverProfile.GetValue(driverID, traceStateProfileName, String.Empty, traceStateDefault))
-            IPAddress = driverProfile.GetValue(driverID, IPProfileName, String.Empty, IPDefault)
-            CameraName = driverProfile.GetValue(driverID, cameraNameProfileName, String.Empty, cameraNameDefault)
-            camUsername = driverProfile.GetValue(driverID, usernameProfileName, String.Empty, usernameDefault)
-            camPassword = driverProfile.GetValue(driverID, passwordProfileName, String.Empty, passwordDefault)
+            numCameras = CInt(driverProfile.GetValue(driverID, numCamerasProfileName, String.Empty, numCamerasDefault))
+            For i As Integer = 0 To 3  ' 4 cameras
+                IPAddress(i) = driverProfile.GetValue(driverID, IPProfileName, i.ToString, IPDefault)
+                CameraName(i) = driverProfile.GetValue(driverID, cameraNameProfileName, i.ToString, cameraNameDefault)
+                camUsername(i) = driverProfile.GetValue(driverID, usernameProfileName, i.ToString, usernameDefault)
+                camPassword(i) = driverProfile.GetValue(driverID, passwordProfileName, i.ToString, passwordDefault)
+            Next  'i
         End Using
     End Sub
 
@@ -544,11 +556,15 @@ Public Class Switch
     Friend Sub WriteProfile()
         Using driverProfile As New Profile()
             driverProfile.DeviceType = "Switch"
-            driverProfile.WriteValue(driverID, traceStateProfileName, traceState.ToString())
-            driverProfile.WriteValue(driverID, IPProfileName, IPAddress)
-            driverProfile.WriteValue(driverID, cameraNameProfileName, CameraName)
-            driverProfile.WriteValue(driverID, usernameProfileName, camUsername)
-            driverProfile.WriteValue(driverID, passwordProfileName, camPassword)
+
+            driverProfile.WriteValue(driverID, traceStateProfileName, traceState.ToString, String.Empty)
+            driverProfile.WriteValue(driverID, numCamerasProfileName, numCameras.ToString, String.Empty)
+            For i As Integer = 0 To 3
+                driverProfile.WriteValue(driverID, IPProfileName, IPAddress(i), i.ToString)
+                driverProfile.WriteValue(driverID, cameraNameProfileName, CameraName(i), i.ToString)
+                driverProfile.WriteValue(driverID, usernameProfileName, camUsername(i), i.ToString)
+                driverProfile.WriteValue(driverID, passwordProfileName, camPassword(i), i.ToString)
+            Next  'i
         End Using
 
     End Sub
@@ -556,36 +572,48 @@ Public Class Switch
 #End Region
 
 #Region "My functions"
-    Private Function getCurrentMode() As Boolean
+    Private Function getCurrentMode() As Boolean()
         Dim client As New System.Net.WebClient
         Dim credentials As New System.Net.CredentialCache()
-        Dim getConfigURI As New Uri("http://" + IPAddress + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
-        credentials.Add(getConfigURI, "Digest", New Net.NetworkCredential(camUsername, camPassword))
+        Dim ConfigURI(3) As Uri
+        For i = 0 To numCameras - 1
+            ConfigURI(i) = New Uri("http://" + IPAddress(i) + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
+            If credentials.GetCredential(ConfigURI(i), "Digest") Is Nothing Then    ' Check to see if credential exists, for multi cam testing w/ 1 cam
+                credentials.Add(ConfigURI(i), "Digest", New Net.NetworkCredential(camUsername(i), camPassword(i)))
+            End If
+        Next  'i
+        '        Dim getConfigURI As New Uri("http://" + IPAddress + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
+        '        credentials.Add(getConfigURI, "Digest", New Net.NetworkCredential(camUsername, camPassword))
         client.Credentials = credentials
         Dim response As String
-        Try
-            response = client.DownloadString(getConfigURI)
-            If response = "table.VideoInMode[0].Config[0]=1" Then
-                Return False        ' Night mode, no IR
-            Else
-                Return True         ' Day mode, IR available
-            End If
-        Catch ex As Exception
+        For i = 0 To numCameras - 1
+            Try
+                response = client.DownloadString(ConfigURI(i))
+                If response = "table.VideoInMode[0].Config[0]=1" Then
+                    SwitchState(i) = False        ' Night mode, no IR
+                Else
+                    SwitchState(i) = True         ' Day mode, IR available
+                End If
+            Catch ex As Exception
+                SwitchState(i) = False
+            End Try
+        Next  'i
+        Return SwitchState
 
-        End Try
+
     End Function
 
-    Private Sub setMode(val As Boolean)
+    Private Sub setMode(id As Short, val As Boolean)
         Dim client As New System.Net.WebClient
         Dim credentials As New System.Net.CredentialCache()
-        Dim strURI As String = "http://" + IPAddress + "/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].Config[0]"
+        Dim strURI As String = "http://" + IPAddress(id) + "/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].Config[0]"
         If val Then
             strURI = strURI + "=0"
         Else
             strURI = strURI + "=1"
         End If
         Dim setConfigURI As New Uri(strURI)
-        credentials.Add(setConfigURI, "Digest", New Net.NetworkCredential(camUsername, camPassword))
+        credentials.Add(setConfigURI, "Digest", New Net.NetworkCredential(camUsername(id), camPassword(id)))
         client.Credentials = credentials
         Dim response As String = client.DownloadString(setConfigURI)
     End Sub
