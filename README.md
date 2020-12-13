@@ -19,6 +19,7 @@ SwitchState True (On) = Day profile
 * 1.0.1 - Fix an issue w/ GetSwitchValue() causing conformance to fail.
 * 1.0.2 - Fix an issue w/ SetSwitchValue() causing conformance to fail.
 * 1.1.0	- First working multi-camera version
+* 1.1.1	- Clean up / add comments, some array sizes changed to use numCameras
 
 **Note for users of Sequence Generator Pro 4.x**:
 

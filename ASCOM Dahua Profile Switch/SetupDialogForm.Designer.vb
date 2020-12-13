@@ -115,7 +115,7 @@ Partial Class SetupDialogForm
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(41, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "V 1.1.0"
+        Me.Label1.Text = "V 1.1.1"
         '
         'PictureBox1
         '

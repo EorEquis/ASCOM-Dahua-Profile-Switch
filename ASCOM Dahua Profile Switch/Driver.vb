@@ -17,6 +17,7 @@
 ' 2020-12-12	Eor	1.0.1	Fix an issue w/ GetSwitchValue() causing conformance to fail.
 ' 2020-12-12	Eor	1.0.2	Fix an issue w/ SetSwitchValue() causing conformance to fail.
 ' 2020-12-12	Eor	1.1.0	First working multi-camera version
+' 2020-12-13	Eor	1.1.1	Clean up / add comments, some array sizes changed to use numCameras
 ' ---------------------------------------------------------------------------------
 '
 '
@@ -72,18 +73,19 @@ Public Class Switch
     Friend Shared IPDefault As String = "192.168.1.108"     ' Default IP of Dahua Cameras
     Friend Shared traceStateDefault As String = "True"
     Friend Shared cameraNameDefault As String = "Camera"
-    Friend Shared usernameDefault As String = "admin"
-    Friend Shared passwordDefault As String = ""
+    Friend Shared usernameDefault As String = "admin"       ' Default username for Dahua cameras
+    Friend Shared passwordDefault As String = "admin"       ' Default password for Dahua cameras
     Friend Shared numCamerasDefault As Integer = 1
 
     Friend Shared numCameras As Short
 
     Friend Shared traceState As Boolean
-    Friend Shared IPAddress(3) As String                       ' IP Address of Dahua Camera
-    Friend Shared CameraName(3) As String                      ' Name of camera and switch
-    Friend Shared SwitchState(3) As Boolean                    ' True == Day, False == Night
-    Friend Shared camUsername(3) As String                     ' Camera username
-    Friend Shared camPassword(3) As String                     ' Camera password
+    ' *******  4 element arrays to hold values for up to 4 cameras
+    Friend Shared IPAddress(3) As String                    ' IP Address of Dahua Camera
+    Friend Shared CameraName(3) As String                   ' Name of camera and switch
+    Friend Shared SwitchState(3) As Boolean                 ' True == Day, False == Night
+    Friend Shared camUsername(3) As String                  ' Camera username
+    Friend Shared camPassword(3) As String                  ' Camera password
 
     Private connectedState As Boolean                       ' Private variable to hold the connected state
     Private utilities As Util                               ' Private variable to hold an ASCOM Utilities object
@@ -91,7 +93,7 @@ Public Class Switch
     Private TL As TraceLogger                               ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private VerMaj As String = "1"
     Private VerMin As String = "1"
-    Private VerBuild As String = "0"
+    Private VerBuild As String = "1"
 
     '
     ' Constructor - Must be public for COM registration!
@@ -121,9 +123,7 @@ Public Class Switch
     ''' THIS IS THE ONLY PLACE WHERE SHOWING USER INTERFACE IS ALLOWED!
     ''' </summary>
     Public Sub SetupDialog() Implements ISwitchV2.SetupDialog
-        ' consider only showing the setup dialog if not connected
-        ' or call a different dialog if connected
-        If IsConnected Then
+        If IsConnected Then     ' Only show setup dialog if not connected.
             System.Windows.Forms.MessageBox.Show("Already connected, just press OK")
         End If
 
@@ -148,31 +148,18 @@ Public Class Switch
 
     Public Sub CommandBlind(ByVal Command As String, Optional ByVal Raw As Boolean = False) Implements ISwitchV2.CommandBlind
         CheckConnected("CommandBlind")
-        ' TODO The optional CommandBlind method should either be implemented OR throw a MethodNotImplementedException
-        ' If implemented, CommandBlind must send the supplied command to the mount And return immediately without waiting for a response
-
         Throw New MethodNotImplementedException("CommandBlind")
     End Sub
 
     Public Function CommandBool(ByVal Command As String, Optional ByVal Raw As Boolean = False) As Boolean _
         Implements ISwitchV2.CommandBool
         CheckConnected("CommandBool")
-        ' TODO The optional CommandBool method should either be implemented OR throw a MethodNotImplementedException
-        ' If implemented, CommandBool must send the supplied command to the mount, wait for a response and parse this to return a True Or False value
-
-        ' Dim retString as String = CommandString(command, raw) ' Send the command And wait for the response
-        ' Dim retBool as Boolean = XXXXXXXXXXXXX ' Parse the returned string And create a boolean True / False value
-        ' Return retBool ' Return the boolean value to the client
-
         Throw New MethodNotImplementedException("CommandBool")
     End Function
 
     Public Function CommandString(ByVal Command As String, Optional ByVal Raw As Boolean = False) As String _
         Implements ISwitchV2.CommandString
         CheckConnected("CommandString")
-        ' TODO The optional CommandString method should either be implemented OR throw a MethodNotImplementedException
-        ' If implemented, CommandString must send the supplied command to the mount and wait for a response before returning this to the client
-
         Throw New MethodNotImplementedException("CommandString")
     End Function
 
@@ -206,7 +193,6 @@ Public Class Switch
     Public ReadOnly Property DriverInfo As String Implements ISwitchV2.DriverInfo
         Get
             Dim m_version As Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
-            ' TODO customise this driver description
             Dim s_driverInfo As String = "Driver Version: " + VerMaj + "." + VerMin
             TL.LogMessage("DriverInfo Get", s_driverInfo)
             Return s_driverInfo
@@ -215,7 +201,6 @@ Public Class Switch
 
     Public ReadOnly Property DriverVersion() As String Implements ISwitchV2.DriverVersion
         Get
-            ' Get our own assembly and report its version number
             Dim s_driverInfo As String = VerMaj + "." + VerMin
             TL.LogMessage("DriverVersion Get", s_driverInfo)
             Return s_driverInfo
@@ -252,15 +237,13 @@ Public Class Switch
 
 #Region "ISwitchV2 Implementation"
 
-
-
     ''' <summary>
     ''' The number of switches managed by this driver
     ''' </summary>
     Public ReadOnly Property MaxSwitch As Short Implements ISwitchV2.MaxSwitch
         Get
             TL.LogMessage("MaxSwitch Get", numCameras.ToString())
-            Return numCameras
+            Return numCameras       ' numCameras comes from the profile, set when showing setup dialog
         End Get
     End Property
 
@@ -312,7 +295,7 @@ Public Class Switch
     Public Function CanWrite(id As Short) As Boolean Implements ISwitchV2.CanWrite
         Validate("CanWrite", id)
         TL.LogMessage("CanWrite", "Default true")
-        Return True
+        Return True     ' All cameras can be written to : Told to switch profile
     End Function
 
 #Region "boolean members"
@@ -325,7 +308,7 @@ Public Class Switch
     Function GetSwitch(id As Short) As Boolean Implements ISwitchV2.GetSwitch
         Validate("GetSwitch", id, True)
         TL.LogMessage("GetSwitch", "Returned " + SwitchState(id).ToString)
-        Return SwitchState(id)
+        Return SwitchState(id)      ' We don't actually check switch state after initial connection...just track it when switch is set.
     End Function
 
     ''' <summary>
@@ -338,7 +321,7 @@ Public Class Switch
     Sub SetSwitch(id As Short, state As Boolean) Implements ISwitchV2.SetSwitch
         Validate("SetSwitch", id, True)
         setMode(id, state)
-        SwitchState(id) = state
+        SwitchState(id) = state     ' Track the switch state.  No need to bother the camera and as.
         TL.LogMessage("SetSwitch", "Set SwitchState to " + SwitchState.ToString)
     End Sub
 
@@ -353,7 +336,7 @@ Public Class Switch
     ''' <returns></returns>
     Function MaxSwitchValue(id As Short) As Double Implements ISwitchV2.MaxSwitchValue
         Validate("MaxSwitchValue", id)
-        TL.LogMessage("MaxSwitchValue", "Returning 1.0")
+        TL.LogMessage("MaxSwitchValue", "Returning 1.0")    ' Our switches are boolean.  Either on/off, day/night
         Return 1.0
     End Function
 
@@ -365,7 +348,7 @@ Public Class Switch
     ''' <returns></returns>
     Function MinSwitchValue(id As Short) As Double Implements ISwitchV2.MinSwitchValue
         Validate("MinSwitchValue", id)
-        TL.LogMessage("MinSwitchValue", "Returning 0.0")
+        TL.LogMessage("MinSwitchValue", "Returning 0.0")   ' Our switches are boolean.  Either on/off, day/night
         Return 0.0
     End Function
 
@@ -379,7 +362,7 @@ Public Class Switch
     ''' <returns></returns>
     Function SwitchStep(id As Short) As Double Implements ISwitchV2.SwitchStep
         Validate("SwitchStep", id)
-        TL.LogMessage("SwitchStep", "Returning 1.0")
+        TL.LogMessage("SwitchStep", "Returning 1.0")   ' Our switches are boolean.  Either on/off, day/night
         Return 1.0
     End Function
 
@@ -407,6 +390,7 @@ Public Class Switch
     ''' If the switch cannot be set then throws a MethodNotImplementedException.
     ''' If the value is not between the maximum and minimum then throws an InvalidValueException
     ''' boolean switches must throw a MethodNotImplementedException
+    ''' This is not true, they just haven't updated the template.  Docs now say it must not throw MethodNotImplementedException
     ''' </summary>
     ''' <param name="id"></param>
     ''' <param name="value"></param>
@@ -418,6 +402,7 @@ Public Class Switch
             TL.LogMessage("SetSwitchValue", String.Format("InvalidValueException Switch id {0} : value {1}", id, value))
         End If
 
+        ' We have to math a bit here now.  Despite boolean switches, we must implement this now.
         If value < 0.5 Then
             setVal = False
         Else
@@ -481,7 +466,6 @@ Public Class Switch
 
 #Region "Private properties and methods"
     ' here are some useful properties and methods that can be used as required
-    ' to help with
 
 #Region "ASCOM Registration"
 
@@ -518,7 +502,6 @@ Public Class Switch
     ''' </summary>
     Private ReadOnly Property IsConnected As Boolean
         Get
-            ' TODO check that the driver hardware connection exists and is connected to the hardware
             Return connectedState
         End Get
     End Property
@@ -572,45 +555,53 @@ Public Class Switch
 #End Region
 
 #Region "My functions"
+    ' Extra functions and subs created to perform various tasks needed for this specific driver
+
     Private Function getCurrentMode() As Boolean()
+        ' Gets the current profile for the cameras we know about.  We don't loop through 4 cameras, since any unused cameras probably have
+        ' invalid/blank configurations that we won't be able to connect to.
+
         Dim client As New System.Net.WebClient
         Dim credentials As New System.Net.CredentialCache()
-        Dim ConfigURI(3) As Uri
-        For i = 0 To numCameras - 1
+        Dim response As String
+        Dim ConfigURI(numCameras - 1) As Uri
+
+        For i = 0 To numCameras - 1     ' THis loop generates credentials for each camera in use
             ConfigURI(i) = New Uri("http://" + IPAddress(i) + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
             If credentials.GetCredential(ConfigURI(i), "Digest") Is Nothing Then    ' Check to see if credential exists, for multi cam testing w/ 1 cam
                 credentials.Add(ConfigURI(i), "Digest", New Net.NetworkCredential(camUsername(i), camPassword(i)))
             End If
         Next  'i
-        '        Dim getConfigURI As New Uri("http://" + IPAddress + "/cgi-bin/configManager.cgi?action=getConfig&name=VideoInMode[0].Config[0]")
-        '        credentials.Add(getConfigURI, "Digest", New Net.NetworkCredential(camUsername, camPassword))
-        client.Credentials = credentials
-        Dim response As String
-        For i = 0 To numCameras - 1
+
+        client.Credentials = credentials    ' Yes we could do this in the loop, and spare having 2 loops.  But this flow made more sense to me. :)
+
+        For i = 0 To numCameras - 1     ' This loop connects to each camera to get its profile
             Try
                 response = client.DownloadString(ConfigURI(i))
+
+                ' The Dahua API always responds with this string.  Config[0]=1 for Night, 0 for Day profile.
+                ' Probably need to keep an eye on this, as obviously they might change.
                 If response = "table.VideoInMode[0].Config[0]=1" Then
-                    SwitchState(i) = False        ' Night mode, no IR
+                    SwitchState(i) = False        ' Night mode
                 Else
-                    SwitchState(i) = True         ' Day mode, IR available
+                    SwitchState(i) = True         ' Day mode
                 End If
             Catch ex As Exception
-                SwitchState(i) = False
+                SwitchState(i) = True               ' If we fail to get a valid response, we presume Day profile because we have to presume something
             End Try
         Next  'i
         Return SwitchState
-
-
     End Function
 
     Private Sub setMode(id As Short, val As Boolean)
+        ' Sets the profile for the given camera ID.
         Dim client As New System.Net.WebClient
         Dim credentials As New System.Net.CredentialCache()
         Dim strURI As String = "http://" + IPAddress(id) + "/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].Config[0]"
         If val Then
-            strURI = strURI + "=0"
+            strURI = strURI + "=0"      ' True, day mode
         Else
-            strURI = strURI + "=1"
+            strURI = strURI + "=1"      ' False, night mode
         End If
         Dim setConfigURI As New Uri(strURI)
         credentials.Add(setConfigURI, "Digest", New Net.NetworkCredential(camUsername(id), camPassword(id)))
