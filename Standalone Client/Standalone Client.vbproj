@@ -10,7 +10,7 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>ASCOM.TriStarDahuaProfile.My.MyApplication</StartupObject>
     <RootNamespace>ASCOM.TriStarDahuaProfile</RootNamespace>
-    <AssemblyName>ASCOM.TriStarDahuaProfile.Test</AssemblyName>
+    <AssemblyName>Dahua Profile Switcher Standalone Client</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
@@ -23,7 +23,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>ASCOM.TriStarDahuaProfile.Test.xml</DocumentationFile>
+    <DocumentationFile>Dahua Profile Switcher Standalone Client.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -33,7 +33,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>ASCOM.TriStarDahuaProfile.Test.xml</DocumentationFile>
+    <DocumentationFile>Dahua Profile Switcher Standalone Client.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

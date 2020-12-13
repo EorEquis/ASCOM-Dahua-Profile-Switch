@@ -14,6 +14,9 @@
 ' Date			Who	Vers	Description
 ' -----------	---	-----	-------------------------------------------------------
 ' 2020-12-12	Eor	1.0.0	Initial edit, from Switch template
+' 2020-12-12	Eor	1.0.1	Fix an issue w/ GetSwitchValue() causing conformance to fail.
+' 2020-12-12	Eor	1.0.2	Fix an issue w/ SetSwitchValue() causing conformance to fail.
+' 2020-12-12	Eor	1.1.0	First working multi-camera version
 ' ---------------------------------------------------------------------------------
 '
 '
@@ -87,8 +90,8 @@ Public Class Switch
     Private astroUtilities As AstroUtils                    ' Private variable to hold an AstroUtils object to provide the Range method
     Private TL As TraceLogger                               ' Private variable to hold the trace logger object (creates a diagnostic log file with information that you specify)
     Private VerMaj As String = "1"
-    Private VerMin As String = "0"
-    Private VerBuild As String = "2"
+    Private VerMin As String = "1"
+    Private VerBuild As String = "0"
 
     '
     ' Constructor - Must be public for COM registration!
