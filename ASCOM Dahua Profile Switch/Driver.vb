@@ -18,6 +18,7 @@
 ' 2020-12-12	Eor	1.0.2	Fix an issue w/ SetSwitchValue() causing conformance to fail.
 ' 2020-12-12	Eor	1.1.0	First working multi-camera version
 ' 2020-12-13	Eor	1.1.1	Clean up / add comments, some array sizes changed to use numCameras
+' 2021-11-09    Eor 1.2.0   Trying to make things work with NINA, no clue why this driver has gone kablooey
 ' ---------------------------------------------------------------------------------
 '
 '
